@@ -6,16 +6,16 @@ module Authorization
 
     # Modify these constants in your environment.rb to tailor the plugin to
     # your authentication system
-    if not Object.constants.include? "LOGIN_REQUIRED_REDIRECTION"
+    unless Object.const_defined?(:LOGIN_REQUIRED_REDIRECTION)
       LOGIN_REQUIRED_REDIRECTION = {
         :controller => 'session',
         :action => 'new'
       }
     end
-    if not Object.constants.include? "PERMISSION_DENIED_REDIRECTION"
+    unless Object.const_defined?(:PERMISSION_DENIED_REDIRECTION)
       PERMISSION_DENIED_REDIRECTION = ''
     end
-    if not Object.constants.include? "STORE_LOCATION_METHOD"
+    unless Object.const_defined?(:STORE_LOCATION_METHOD)
       STORE_LOCATION_METHOD = :store_location
     end
 
@@ -110,7 +110,7 @@ module Authorization
           @options[:user]
         elsif @options[:get_user_method]
           send( @options[:get_user_method] )
-        elsif self.respond_to? :current_user
+        elsif self.respond_to? :current_user, true
           current_user
         elsif not @options[:allow_guests]
           raise( CannotObtainUserObject, "Couldn't find #current_user or @user, and nothing appropriate found in hash" )
@@ -156,7 +156,7 @@ ActionView::Base.send( :include, Authorization::Base::ControllerInstanceMethods 
 
 # When used with the auth_test app, we define this in config/environment.rb
 # AUTHORIZATION_MIXIN = "hardwired"
-if not Object.constants.include? "AUTHORIZATION_MIXIN"
+unless Object.const_defined?(:AUTHORIZATION_MIXIN)
   AUTHORIZATION_MIXIN = "object roles"
 end
 
