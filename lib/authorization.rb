@@ -96,7 +96,7 @@ module Authorization
         send( STORE_LOCATION_METHOD ) if respond_to? STORE_LOCATION_METHOD
         if @current_user && !@current_user.nil? && @current_user != :false
           flash[:notice] = @options[:permission_denied_message] || "Permission denied. You cannot access the requested page."
-          redirect_to @options[:permission_denied_redirection] || @current_user.uri
+          redirect_to @options[:permission_denied_redirection] || PERMISSION_DENIED_REDIRECTION
         else
           flash[:notice] = @options[:login_required_message] || "Login is required to access the requested page."
           redirect_to @options[:login_required_redirection] || LOGIN_REQUIRED_REDIRECTION
@@ -132,7 +132,7 @@ module Authorization
           model_symbol = model_name.to_sym
           if @options[model_symbol]
             @options[model_symbol]
-          elsif instance_variables.include?( '@'+model_name )
+          elsif instance_variables.include?( '@'+model_name ) || instance_variables.include?( ('@'+model_name).to_sym )
             instance_variable_get( '@'+model_name )
           # Note -- while the following code makes autodiscovery more convenient, it's a little too much side effect & security question
           # elsif self.params[:id]
